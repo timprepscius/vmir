@@ -6,11 +6,13 @@
 //  Copyright (c) 2016 Timothy Prepscius. All rights reserved.
 //
 
-#include "test_external_functions_script.h"
+#include "simple_print.h"
 
-void external_print (const char *message);
+extern "C" {
 
 void script_function ()
 {
-	external_print("hello");
+	simple_print("hello", 'x', 42, 3.14158, 1.41123123123123124124124888886666);
+}
+
 }

@@ -6,9 +6,6 @@
 //  Copyright © 2016 Timothy Prepscius. All rights reserved.
 //
 
-#ifndef simple_print_hpp
-#define simple_print_hpp
+#pragma once
 
-#include <stdio.h>
-
-#endif /* simple_print_hpp */
+void simple_print (const char *message, char c, int i, float f, double d);

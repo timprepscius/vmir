@@ -125,6 +125,9 @@ typedef vm_ext_function_t *(*vmir_function_resolver_t)(const char *function,
 vm_ext_function_t *vmir_default_external_function_resolver(const char *function,
                                                            void *opaque);
 
+
+int vm_exec_ext(void *fn, void *ret, const void *rf, ir_unit_t *iu);
+
 /**
  *
  */

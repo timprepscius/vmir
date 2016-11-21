@@ -7,30 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F6B7BD291DE2055D00FE1D6F /* external_functions_coordinator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B7BD271DE2055D00FE1D6F /* external_functions_coordinator.cpp */; };
+		F6B7BD2D1DE20EB600FE1D6F /* simple_print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B7BD2B1DE20EB600FE1D6F /* simple_print.cpp */; };
+		F6B7BD2F1DE2121700FE1D6F /* test_external_functions_script.bc in CopyFiles */ = {isa = PBXBuildFile; fileRef = F6B7BD241DE203E400FE1D6F /* test_external_functions_script.bc */; };
 		F6FA940B1CB9C0360004382D /* vmir.c in Sources */ = {isa = PBXBuildFile; fileRef = F6FA940A1CB9C0360004382D /* vmir.c */; };
-		F6FA94101CB9C0D30004382D /* test_external_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = F6FA940E1CB9C0D30004382D /* test_external_functions.c */; };
+		F6FA94101CB9C0D30004382D /* test_external_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6FA940E1CB9C0D30004382D /* test_external_functions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		F6D068261CB9B8DD00220DE5 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
 			files = (
+				F6B7BD2F1DE2121700FE1D6F /* test_external_functions_script.bc in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F6D068281CB9B8DD00220DE5 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = test; path = /Users/tprepscius/Documents/Projects/vmir/test/external_functions/build/Debug/test; sourceTree = "<absolute>"; };
+		F6B7BD231DE2035E00FE1D6F /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6B7BD241DE203E400FE1D6F /* test_external_functions_script.bc */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_external_functions_script.bc; path = "build-O0/test_external_functions_script.bc"; sourceTree = "<group>"; };
+		F6B7BD251DE203FE00FE1D6F /* test_external_functions_script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_external_functions_script.cpp; path = src/test_external_functions_script.cpp; sourceTree = "<group>"; };
+		F6B7BD271DE2055D00FE1D6F /* external_functions_coordinator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = external_functions_coordinator.cpp; sourceTree = "<group>"; };
+		F6B7BD281DE2055D00FE1D6F /* external_functions_coordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = external_functions_coordinator.h; sourceTree = "<group>"; };
+		F6B7BD2B1DE20EB600FE1D6F /* simple_print.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simple_print.cpp; path = src/simple_print.cpp; sourceTree = "<group>"; };
+		F6B7BD2C1DE20EB600FE1D6F /* simple_print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simple_print.h; path = src/simple_print.h; sourceTree = "<group>"; };
 		F6D068321CB9B90100220DE5 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../../src; sourceTree = "<group>"; };
 		F6FA940A1CB9C0360004382D /* vmir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vmir.c; path = ../../src/vmir.c; sourceTree = "<group>"; };
-		F6FA940E1CB9C0D30004382D /* test_external_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_external_functions.c; sourceTree = "<group>"; };
-		F6FA94111CB9C39D0004382D /* test_external_functions_script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_external_functions_script.cpp; sourceTree = "<group>"; };
-		F6FA94121CB9C39D0004382D /* test_external_functions_script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test_external_functions_script.h; sourceTree = "<group>"; };
-		F6FA94141CB9C9900004382D /* test_external_functions_script.bc */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_external_functions_script.bc; sourceTree = "<group>"; };
+		F6FA940E1CB9C0D30004382D /* test_external_functions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_external_functions.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,15 +51,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F6B7BD2E1DE20EBF00FE1D6F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F6B7BD241DE203E400FE1D6F /* test_external_functions_script.bc */,
+				F6B7BD251DE203FE00FE1D6F /* test_external_functions_script.cpp */,
+				F6B7BD2B1DE20EB600FE1D6F /* simple_print.cpp */,
+				F6B7BD2C1DE20EB600FE1D6F /* simple_print.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
 		F6D0681F1CB9B8DD00220DE5 = {
 			isa = PBXGroup;
 			children = (
-				F6FA94141CB9C9900004382D /* test_external_functions_script.bc */,
-				F6FA94111CB9C39D0004382D /* test_external_functions_script.cpp */,
-				F6FA94121CB9C39D0004382D /* test_external_functions_script.h */,
-				F6FA940E1CB9C0D30004382D /* test_external_functions.c */,
+				F6B7BD2E1DE20EBF00FE1D6F /* src */,
+				F6B7BD271DE2055D00FE1D6F /* external_functions_coordinator.cpp */,
+				F6B7BD281DE2055D00FE1D6F /* external_functions_coordinator.h */,
+				F6FA940E1CB9C0D30004382D /* test_external_functions.cpp */,
 				F6FA940A1CB9C0360004382D /* vmir.c */,
 				F6D068321CB9B90100220DE5 /* src */,
+				F6B7BD231DE2035E00FE1D6F /* test */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,7 +92,7 @@
 			);
 			name = test;
 			productName = vmir;
-			productReference = F6D068281CB9B8DD00220DE5 /* test */;
+			productReference = F6B7BD231DE2035E00FE1D6F /* test */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -113,7 +132,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6FA940B1CB9C0360004382D /* vmir.c in Sources */,
-				F6FA94101CB9C0D30004382D /* test_external_functions.c in Sources */,
+				F6B7BD291DE2055D00FE1D6F /* external_functions_coordinator.cpp in Sources */,
+				F6FA94101CB9C0D30004382D /* test_external_functions.cpp in Sources */,
+				F6B7BD2D1DE20EB600FE1D6F /* simple_print.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +221,7 @@
 		F6D068301CB9B8DD00220DE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					VM_DONT_USE_COMPUTED_GOTO,
 					"DEBUG=1",
@@ -212,6 +234,7 @@
 		F6D068311CB9B8DD00220DE5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

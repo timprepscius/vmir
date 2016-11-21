@@ -650,7 +650,7 @@ vm_exec(uint16_t *I, void *rf, void *ret, const vm_frame_t *P)
 
   VMOP(JSR_EXT)
     vm_tracef(&F, "Calling %s (external)", vm_funcname(I[0], iu));
-    r = iu->iu_function_table[I[0]](rf + I[2], rf + I[1], iu, hostmem);
+    r = vm_exec_ext(iu->iu_function_table[I[0]], rf + I[2], rf + I[1], iu);
     RESTORE_CURRENT_FRAME();
     if(r)
       return r;
@@ -697,7 +697,7 @@ vm_exec(uint16_t *I, void *rf, void *ret, const vm_frame_t *P)
 
   VMOP(INVOKE_EXT)
     vm_tracef(&F, "Calling %s (external)", vm_funcname(I[0], iu));
-    r = iu->iu_function_table[I[0]](rf + I[2], rf + I[1], iu, hostmem);
+    r = vm_exec_ext(iu->iu_function_table[I[0]], rf + I[2], rf + I[1], iu);
     RESTORE_CURRENT_FRAME();
     I = (void *)I + (int16_t)I[3 + r]; NEXT(0);
 
