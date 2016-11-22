@@ -1,8 +1,11 @@
 
 #include "external_functions_coordinator.h"
+#include "external_pointers_coordinator.h"
 #include "src/simple_print.h"
 
 #include <map>
+#include <typeinfo>
+#include <string>
 
 // for the readFileIntoMemory
 #include <stdlib.h>
@@ -44,12 +47,19 @@ void readFileIntoMemory (const char *fileName, uint8_t **memory, long long *size
 // finds the script function and executes it
 //--------------------------
 
+void printValueTemp (Empty *e)
+{
+	vmir_to_nativeptr(vmir_get_thread_ir_unit(), e)->printValue();
+}
 
 std::map<const char *, function_link_t> external_functions = {
-	{ "_Z12simple_printPKccifd", { (void *)simple_print, "*ccifd:v" } }
+	{ "_Z12simple_printPKcchijfdxy", { (void *)simple_print, typeid(simple_print).name() } },
+	{ "_ZN11ValueHolderC1Ei", { (void *)simple_print, typeid(ValueHolder::ValueHolder(int)).name() } },
+	{ "_ZN11ValueHolder10printValueEv", { (void *)simple_print, typeid(&ValueHolder::printValue).name() } },
+	{ "_ZN5Empty10printValueEv", { (void *)printValueTemp, typeid(&Empty::printValue).name() }  }
 };
 
-int main(int argc, char **argv)
+int main(int argc,char **argv)
 {
   uint8_t *file = NULL;
   long long fileSize;
@@ -83,6 +93,14 @@ int main(int argc, char **argv)
 
   int r = vmir_vm_function_call(iu, f, (void *)&ret);
 
+  f = vmir_find_function(iu, "script_function_with_argument");
+	
+  Empty *empty = new Empty();
+  vmir_ptr emptyPtr = vmir_map_native_ptr(iu, empty);
+	
+  r = vmir_vm_function_call(iu, f, (void *)&ret, emptyPtr);
+
+  vmir_unmap_native_ptr(iu, empty);
   free(mem);
 
   vmir_destroy(iu);

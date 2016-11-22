@@ -10,6 +10,46 @@
 
 #include <map>
 
+// this needs to be changed to handle actual mangling syntax
+static void skip_type (const char **c)
+{
+	while (isupper(**c))
+		++*c;
+	
+	if (isnumber(**c))
+	{
+		while (isnumber(**c))
+		{
+			char number[255];
+			char *n;
+
+			// kludge for now
+			n = number;
+			while (isnumber(**c))
+			{
+				*n++ = **c;
+				(*c)++;
+			}
+			
+			*n = 0;
+			
+			int count = atoi(number);
+			*c += count;
+		}
+	}
+	else
+	{
+		++*c;
+	}
+}
+
+ir_unit_t *thread_ir_unit = nullptr;
+
+ir_unit_t *vmir_get_thread_ir_unit()
+{
+	return thread_ir_unit;
+}
+
 int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, const void *rf, ir_unit_t *iu)
 {
 	typedef void (*PFN)();
@@ -31,13 +71,20 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 	char stack[256];
 	char *s = stack;
 	char *m = 0;
+	char returnType = 0;
 	
 	const char *c;
-	for (c=signature; *c!=':'; c++)
+	for (c=signature; *c!='E'; c++)
 	{
 		switch (*c)
 		{
-		case '*':
+		case 'F':
+			returnType = *++c;
+		break;
+		
+		case 'M':
+		case 'P':
+		case 'R':
 			if (registersUsed < registersAvailable)
 			{
 				m = (char *)registers[registersUsed++];
@@ -50,11 +97,15 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 			
 			*((void **)m) = vmir_vm_ptr(&rf, iu);
 			
-			++c; // skip over the type of pointer, don't need at the moment
+			++c;
+			skip_type(&c);
+			--c;
 		break;
 				
+		case 'h':
 		case 'c':
 		case 'i':
+		case 'j':
 			if (registersUsed < registersAvailable)
 			{
 				m = (char *)registers[registersUsed++];
@@ -69,6 +120,9 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 		break;
 		
 		case 'l':
+		case 'm':
+		case 'x':
+		case 'y':
 			if (registersUsed < registersAvailable)
 			{
 				m = (char *)registers[registersUsed++];
@@ -115,8 +169,6 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 		}
 	}
 	
-	char returnType = *++c;
-
 	char *pStack;
 	char *i = stack;
 	int32_t result_i4;
@@ -227,6 +279,8 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 
 int vm_exec_ext(void *fn, void *ret, const void *rf, ir_unit_t *iu)
 {
+	thread_ir_unit = iu;
+	
 	function_link_t *fl = (function_link_t *)fn;
 	if (fl->signature == 0)
 	{
@@ -287,5 +341,3 @@ void register_functions(const std::map<const char *, function_link_t, cmp_str> &
 		register_function(i.first, i.second);
 	}
 }
-
-

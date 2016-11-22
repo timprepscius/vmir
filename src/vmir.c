@@ -271,12 +271,19 @@ struct ir_unit {
   vmir_logger_t *iu_logger;
 };
 
-static uint32_t
+uint32_t
 vmir_host_to_vmaddr(ir_unit_t *iu, void *ptr)
 {
   if(ptr == NULL)
     return 0;
   return ptr - iu->iu_mem;
+}
+
+void *vmir_vmaddr_to_host(ir_unit_t *iu, uint32_t ptr)
+{
+  if(ptr == NULL)
+    return 0;
+  return ptr + iu->iu_mem;
 }
 
 /**

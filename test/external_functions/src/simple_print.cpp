@@ -9,7 +9,23 @@
 #include "simple_print.h"
 #include <stdio.h>
 
-void simple_print (const char *message, char c, int i, float f, double d)
+void simple_print (const char *message, char c, unsigned char uc, int i, unsigned int ui, float f, double d, int64_t l, uint64_t ul)
 {
-	printf("%s %c %d %f %f\n", message, c, i, f, d);
+	printf("Pc %s c %c uc %d i %d ui %d l %lld ul %lld f %f d %f\n", message, c, uc, i, ui, l, ul, f, d);
+}
+
+
+void Empty::printValue()
+{
+	printf("this class is empty %d\n", x);
+}
+
+ValueHolder::ValueHolder (int _x)
+{
+	x = _x;
+}
+
+void ValueHolder::printValue()
+{
+	printf("%d\n", x);
 }

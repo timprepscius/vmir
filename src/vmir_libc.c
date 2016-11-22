@@ -50,7 +50,7 @@ vmir_heap_init(ir_unit_t *iu)
 }
 
 
-static void *
+void *
 vmir_heap_malloc(ir_unit_t *iu, int size)
 {
   void *p = tlsf_malloc(iu->iu_heap, size);
@@ -63,7 +63,7 @@ vmir_heap_malloc(ir_unit_t *iu, int size)
   return p;
 }
 
-static void
+void
 vmir_heap_free(ir_unit_t *iu, void *ptr)
 {
   if(ptr != NULL)
@@ -174,7 +174,7 @@ vmir_heap_init(ir_unit_t *iu)
 }
 
 
-static void *
+void *
 vmir_heap_malloc(ir_unit_t *iu, int size)
 {
   heap_t *h = iu->iu_heap;
@@ -217,7 +217,7 @@ vmir_heap_merge_next(heap_t *h, heap_block_t *hb)
   hb->hb_size += next->hb_size;
 }
 
-static void
+void
 vmir_heap_free(ir_unit_t *iu, void *ptr)
 {
   if(ptr == NULL)

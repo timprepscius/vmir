@@ -8,20 +8,7 @@
 
 #pragma once
 
-#include <setjmp.h>
-#include <string.h>
-#include <stdarg.h>
-#include <inttypes.h>
-#include <sys/queue.h>
-#include <assert.h>
-#include <sys/param.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-extern "C" {
-#include "../../src/vmir.h"
-}
+#include "safe_vmir.h"
 
 typedef struct {
   void *function_ptr;
@@ -33,3 +20,5 @@ typedef struct {
 void register_function (const char *name, function_link_t link);
 
 vm_ext_function_t *restricted_function_resolver(const char *fn, void *opaque);
+
+ir_unit_t *vmir_get_thread_ir_unit();

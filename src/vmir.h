@@ -252,6 +252,12 @@ float vmir_vm_arg_flt(const void **rfp);
 void *vmir_vm_ptr(const void **rfp, ir_unit_t *iu);
 
 /**
+ * convert from host address space to vm address space
+ */
+uint32_t vmir_host_to_vmaddr(ir_unit_t *iu, void *ptr);
+void *vmir_vmaddr_to_host(ir_unit_t *iu, uint32_t ptr);
+
+/**
  * Pop pointer function argument and convert it from VMIR address
  * space to host address. If the pointer is NULL it will still be NULL
  * after conversion.
