@@ -14,18 +14,22 @@ void simple_print (const char *message, char c, unsigned char uc, int i, unsigne
 	printf("Pc %s c %c uc %d i %d ui %d l %lld ul %lld f %f d %f\n", message, c, uc, i, ui, l, ul, f, d);
 }
 
-
-void Empty::printValue()
+void simple_print_f (float f)
 {
-	printf("this class is empty %d\n", x);
-}
-
-ValueHolder::ValueHolder (int _x)
-{
-	x = _x;
+	printf("%f\n", f);
 }
 
 void ValueHolder::printValue()
 {
-	printf("%d\n", x);
+	printf("ValueHolder %d\n", x);
+}
+
+void SimpleVector::printValue()
+{
+	printf("SimpleVector %f %f %f\n", v[0], v[1], v[2]);
+}
+
+float vector_calculation (const SimpleVector &v)
+{
+	return v.x() + v.y() + v.z();
 }

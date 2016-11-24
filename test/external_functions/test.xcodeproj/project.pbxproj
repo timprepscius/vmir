@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F63B43BC1DE4CD5400319DAC /* external_pointers_coordinator_using_maps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F63B43B51DE4BC0F00319DAC /* external_pointers_coordinator_using_maps.cpp */; };
+		F69B25071DE7318D00FD518E /* external_pointers_coordinator_using_vmir_and_flag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F69B25061DE7318D00FD518E /* external_pointers_coordinator_using_vmir_and_flag.cpp */; };
 		F6B7BD291DE2055D00FE1D6F /* external_functions_coordinator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B7BD271DE2055D00FE1D6F /* external_functions_coordinator.cpp */; };
 		F6B7BD2D1DE20EB600FE1D6F /* simple_print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B7BD2B1DE20EB600FE1D6F /* simple_print.cpp */; };
 		F6B7BD2F1DE2121700FE1D6F /* test_external_functions_script.bc in CopyFiles */ = {isa = PBXBuildFile; fileRef = F6B7BD241DE203E400FE1D6F /* test_external_functions_script.bc */; };
@@ -33,6 +33,7 @@
 		F63B43B61DE4BC0F00319DAC /* external_pointers_coordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = external_pointers_coordinator.h; sourceTree = "<group>"; };
 		F63B43B81DE4BE0C00319DAC /* external_pointers_coordinator_using_vmir.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = external_pointers_coordinator_using_vmir.cpp; sourceTree = "<group>"; };
 		F63B43BA1DE4C1FC00319DAC /* safe_vmir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = safe_vmir.h; sourceTree = "<group>"; };
+		F69B25061DE7318D00FD518E /* external_pointers_coordinator_using_vmir_and_flag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = external_pointers_coordinator_using_vmir_and_flag.cpp; sourceTree = "<group>"; };
 		F6B7BD231DE2035E00FE1D6F /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6B7BD241DE203E400FE1D6F /* test_external_functions_script.bc */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_external_functions_script.bc; path = "build-O0/test_external_functions_script.bc"; sourceTree = "<group>"; };
 		F6B7BD251DE203FE00FE1D6F /* test_external_functions_script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_external_functions_script.cpp; path = src/test_external_functions_script.cpp; sourceTree = "<group>"; };
@@ -72,6 +73,7 @@
 			children = (
 				F6B7BD2E1DE20EBF00FE1D6F /* src */,
 				F63B43BA1DE4C1FC00319DAC /* safe_vmir.h */,
+				F69B25061DE7318D00FD518E /* external_pointers_coordinator_using_vmir_and_flag.cpp */,
 				F63B43B81DE4BE0C00319DAC /* external_pointers_coordinator_using_vmir.cpp */,
 				F63B43B51DE4BC0F00319DAC /* external_pointers_coordinator_using_maps.cpp */,
 				F63B43B61DE4BC0F00319DAC /* external_pointers_coordinator.h */,
@@ -140,10 +142,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F69B25071DE7318D00FD518E /* external_pointers_coordinator_using_vmir_and_flag.cpp in Sources */,
 				F6FA940B1CB9C0360004382D /* vmir.c in Sources */,
 				F6B7BD291DE2055D00FE1D6F /* external_functions_coordinator.cpp in Sources */,
 				F6FA94101CB9C0D30004382D /* test_external_functions.cpp in Sources */,
-				F63B43BC1DE4CD5400319DAC /* external_pointers_coordinator_using_maps.cpp in Sources */,
 				F6B7BD2D1DE20EB600FE1D6F /* simple_print.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

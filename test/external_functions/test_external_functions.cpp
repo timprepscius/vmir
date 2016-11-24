@@ -7,6 +7,8 @@
 #include <typeinfo>
 #include <string>
 
+#include <functional>
+
 // for the readFileIntoMemory
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,23 +42,43 @@ void readFileIntoMemory (const char *fileName, uint8_t **memory, long long *size
 }
 
 
-//--------------------------
-// main
+// I need a better way of doing this:
 //
-// reads the scripts into memory and then the vmir
-// finds the script function and executes it
-//--------------------------
+// the problem is that pointers inside the vm are 32 bits long
+// vmir automatically shifts them into the actual heap when traveling out of the vm and into the host
+//
+// however, if I send in a pointer, it is decaptiated and the real pointer is not recoverable.
+// to solve this I create a system where I store the actual pointer inside of the 64 bit variable
+// and then do a "vmir_to_nativeptr"
+//
+// this works fine when a class is instantiated outside or inside, but not both..
+// I really need a flag..  I think I could do this by setting the 31st bit.
+//
+// Implemented a flag..
+//
+// Now what I need is a neat way of wrapping methods with arguments and sending those arguments
+// into a function, I bet boost has this done already
 
-void printValueTemp (Empty *e)
+void printValueTemp (ValueHolder *v)
 {
-	vmir_to_nativeptr(vmir_get_thread_ir_unit(), e)->printValue();
+	vmir_to_nativeptr(vmir_get_thread_ir_unit(), v)->printValue();
 }
+
+void printSimpleVectorTemp (SimpleVector *v)
+{
+	vmir_to_nativeptr(vmir_get_thread_ir_unit(), v)->printValue();
+	
+	// if not using a flag for vmir ptrs, this must be used
+	// v->printValue();
+}
+
 
 std::map<const char *, function_link_t> external_functions = {
 	{ "_Z12simple_printPKcchijfdxy", { (void *)simple_print, typeid(simple_print).name() } },
-	{ "_ZN11ValueHolderC1Ei", { (void *)simple_print, typeid(ValueHolder::ValueHolder(int)).name() } },
-	{ "_ZN11ValueHolder10printValueEv", { (void *)simple_print, typeid(&ValueHolder::printValue).name() } },
-	{ "_ZN5Empty10printValueEv", { (void *)printValueTemp, typeid(&Empty::printValue).name() }  }
+	{ "_Z14simple_print_ff", { (void *)simple_print_f, typeid(simple_print_f).name() } },
+	{ "_ZN11ValueHolder10printValueEv", { (void *)printValueTemp, typeid(&ValueHolder::printValue).name() }  },
+	{ "_ZN12SimpleVector10printValueEv", { (void *)printSimpleVectorTemp, typeid(&SimpleVector::printValue).name() }  },
+	{ "_Z18vector_calculationRK12SimpleVector", { (void *)vector_calculation, typeid(vector_calculation).name() } }
 };
 
 int main(int argc,char **argv)
@@ -95,12 +117,18 @@ int main(int argc,char **argv)
 
   f = vmir_find_function(iu, "script_function_with_argument");
 	
-  Empty *empty = new Empty();
-  vmir_ptr emptyPtr = vmir_map_native_ptr(iu, empty);
+  ValueHolder *v = new ValueHolder(42);
+  vmir_ptr vp = vmir_map_native_ptr(iu, v);
 	
-  r = vmir_vm_function_call(iu, f, (void *)&ret, emptyPtr);
+  r = vmir_vm_function_call(iu, f, (void *)&ret, vp);
 
-  vmir_unmap_native_ptr(iu, empty);
+  vmir_unmap_native_ptr(iu, v);
+  delete v;
+	
+	
+  f = vmir_find_function(iu, "script_function_interchange");
+  r = vmir_vm_function_call(iu, f, (void *)&ret, vp);
+	
   free(mem);
 
   vmir_destroy(iu);

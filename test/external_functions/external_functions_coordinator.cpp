@@ -233,7 +233,7 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 		case 'f':
             __asm {
                 call pfn
-				fstp result_r4;
+				movss result_r4, xmm0;
             }
 
 			vmir_vm_ret32(ret, *(int32_t *)&result_r4);
@@ -242,7 +242,7 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 		case 'd':
             __asm {
                 call pfn
-				fstp result_r8;
+				movsd result_r8, xmm0;
             }
 
 			vmir_vm_ret64(ret, *(int64_t *)&result_r8);

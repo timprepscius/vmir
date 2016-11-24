@@ -15,9 +15,18 @@ void script_function ()
 	simple_print("hello", 'x', 254, 42, 84, 3.14158, 1.41123123123123124124124888886666, 1234, 4321);
 }
 
-void script_function_with_argument (Empty *e)
+void script_function_with_argument (ValueHolder *v)
 {
-	e->printValue();
+	v->printValue();
+}
+
+void script_function_interchange ()
+{
+	SimpleVector v(1, 2, 3);
+	v.printValue();
+	
+	float x = vector_calculation (v);
+	simple_print_f(x);
 }
 
 }
