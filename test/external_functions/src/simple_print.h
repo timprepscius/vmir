@@ -48,6 +48,18 @@ public:
 	const float &z () const { return v[2]; }
 	
 	void printValue ();
+	void printOther (int other);
 } ;
 
 float vector_calculation (const SimpleVector &v);
+
+	namespace MyNamespace {
+	namespace MySubNamespace {
+	class MyClass
+	{
+	public:
+		int MyFunction (int myarg);
+	} ;
+	} // namespace
+	} // namespace
+

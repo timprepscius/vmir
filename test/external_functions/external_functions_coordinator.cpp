@@ -13,33 +13,40 @@
 // this needs to be changed to handle actual mangling syntax
 static void skip_type (const char **c)
 {
-	while (isupper(**c))
-		++*c;
-	
-	if (isnumber(**c))
+	bool longName = (**c == 'N');
+	while (longName)
 	{
-		while (isnumber(**c))
+		if (**c == 'E')
+			longName = false;
+		else
+			while (isupper(**c))
+				++*c;
+		
+		if (isnumber(**c))
 		{
-			char number[255];
-			char *n;
-
-			// kludge for now
-			n = number;
 			while (isnumber(**c))
 			{
-				*n++ = **c;
-				(*c)++;
+				char number[255];
+				char *n;
+
+				// kludge for now
+				n = number;
+				while (isnumber(**c))
+				{
+					*n++ = **c;
+					(*c)++;
+				}
+				
+				*n = 0;
+				
+				int count = atoi(number);
+				*c += count;
 			}
-			
-			*n = 0;
-			
-			int count = atoi(number);
-			*c += count;
 		}
-	}
-	else
-	{
-		++*c;
+		else
+		{
+			++*c;
+		}
 	}
 }
 
@@ -327,7 +334,7 @@ vm_ext_function_t *restricted_function_resolver(const char *fn, void *opaque)
 	vm_ext_function_t *super = vmir_default_external_function_resolver(fn, opaque);
 	if (super)
 	{
-		register_function(fn, { (void *)super, 0 });
+		register_function(fn, { (FunctionPtr)super, 0 });
 		return restricted_function_resolver(fn, opaque);
 	}
 

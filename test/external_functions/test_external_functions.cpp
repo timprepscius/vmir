@@ -55,36 +55,103 @@ void readFileIntoMemory (const char *fileName, uint8_t **memory, long long *size
 // I really need a flag..  I think I could do this by setting the 31st bit.
 //
 // Implemented a flag..
-//
-// Now what I need is a neat way of wrapping methods with arguments and sending those arguments
-// into a function, I bet boost has this done already
 
-void printValueTemp (ValueHolder *v)
+template<typename R, typename C, typename... A>
+struct MemberFunctionPointer
 {
-	vmir_to_nativeptr(vmir_get_thread_ir_unit(), v)->printValue();
+	typedef R Return;
+	typedef C Class;
+};
+
+template<typename R, typename C, typename... A>
+constexpr auto inferMemberFunctionPointer(R (C::*method)(A...))
+{
+	return MemberFunctionPointer<R,C,A...>{};
 }
 
-void printSimpleVectorTemp (SimpleVector *v)
+template<typename M, M m, typename... A>
+class WrapMemberFunction
 {
-	vmir_to_nativeptr(vmir_get_thread_ir_unit(), v)->printValue();
+	typedef typename decltype(inferMemberFunctionPointer(m))::Class T;
+	typedef typename decltype(inferMemberFunctionPointer(m))::Return R;
+public:
+	static R f (T *t, A... args) {
+		T *n = vmir_to_nativeptr(vmir_get_thread_ir_unit(), t);
+		return (n->*m)(args...);
+	}
 	
-	// if not using a flag for vmir ptrs, this must be used
-	// v->printValue();
-}
+} ;
 
+#define WrapMethod(TM) &WrapMemberFunction<decltype(&TM), &TM>::f
+#define WrapMethodA(TM, args...) &WrapMemberFunction<decltype(&TM), &TM, args>::f
+
+
+
+
+	template<typename M, M m, typename... A>
+	class GenerateMethodSignature
+	{
+		typedef typename decltype(inferMemberFunctionPointer(m))::Class T;
+		typedef typename decltype(inferMemberFunctionPointer(m))::Return R;
+		
+		
+	public:
+		static const char *mangledName (const char *fs)
+		{
+			const char *ts = typeid(T).name();
+			const char *rs = typeid(R).name();
+			const char *ms = typeid(M).name();
+			
+			std::string r = "_Z";
+			if (ts[0] != 'N')
+				r += "N";
+			r += ts;
+			if (ts[0] == 'N')
+				r.pop_back();
+
+			r += std::to_string(strlen(fs));
+			r += fs;
+			r += "E";
+
+			r += ms + strlen ("M") + strlen(ts) + strlen ("F") + strlen(rs);
+			r.pop_back();
+
+			printf("calculated signature %s\n", r.c_str());
+
+			// this is very bad but... for demonstration purposes
+			return strdup(r.c_str());
+		}
+	} ;
+
+	#define ExportSignature(T, M) GenerateMethodSignature<decltype(&T::M), &T::M>::mangledName(#M)
+	const char *myMethodSignature = ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction);
+
+
+#define ExportFunction(F) { (FunctionPtr)F, typeid(F).name() }
+#define ExportMethod(TM) { (FunctionPtr)WrapMethod(TM), typeid(&TM).name() }
+#define ExportMethodA(TM, args...) { (FunctionPtr)WrapMethodA(TM, args), typeid(&TM).name() }
 
 std::map<const char *, function_link_t> external_functions = {
-	{ "_Z12simple_printPKcchijfdxy", { (void *)simple_print, typeid(simple_print).name() } },
-	{ "_Z14simple_print_ff", { (void *)simple_print_f, typeid(simple_print_f).name() } },
-	{ "_ZN11ValueHolder10printValueEv", { (void *)printValueTemp, typeid(&ValueHolder::printValue).name() }  },
-	{ "_ZN12SimpleVector10printValueEv", { (void *)printSimpleVectorTemp, typeid(&SimpleVector::printValue).name() }  },
-	{ "_Z18vector_calculationRK12SimpleVector", { (void *)vector_calculation, typeid(vector_calculation).name() } }
+	{ "_Z12simple_printPKcchijfdxy", ExportFunction(simple_print) },
+	{ "_Z14simple_print_ff", ExportFunction(simple_print_f) },
+	{ ExportSignature(ValueHolder, printValue), ExportMethod(ValueHolder::printValue)  },
+	{ ExportSignature(SimpleVector, printValue), ExportMethod(SimpleVector::printValue) },
+	{ ExportSignature(SimpleVector, printOther), ExportMethodA(SimpleVector::printOther, int) },
+	{ ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction), ExportMethodA(MyNamespace::MySubNamespace::MyClass::MyFunction, int) },
+	{ "_Z18vector_calculationRK12SimpleVector", ExportFunction(vector_calculation) }
+//	{ "_ZN12SimpleVector10printOtherEi", ExportMethodA(SimpleVector::printOther, int) },
+//	{ "_Z18vector_calculationRK12SimpleVector", ExportFunction(vector_calculation) }
 };
+
+const char *s = typeid(SimpleVector).name();
+const char *ss = typeid(&SimpleVector::printValue).name();
 
 int main(int argc,char **argv)
 {
   uint8_t *file = NULL;
   long long fileSize;
+	
+  printf ("%s %s\n%s\n", s, ss, myMethodSignature);
 	
   readFileIntoMemory("test_external_functions_script.bc", &file, &fileSize);
 

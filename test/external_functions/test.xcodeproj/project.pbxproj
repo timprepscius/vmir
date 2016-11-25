@@ -233,7 +233,7 @@
 		F6D068301CB9B8DD00220DE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					VM_DONT_USE_COMPUTED_GOTO,
 					"DEBUG=1",
@@ -247,7 +247,7 @@
 		F6D068311CB9B8DD00220DE5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

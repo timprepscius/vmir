@@ -10,8 +10,11 @@
 
 #include "safe_vmir.h"
 
+typedef void (*Function)(void);
+typedef Function *FunctionPtr;
+
 typedef struct {
-  void *function_ptr;
+  FunctionPtr function_ptr;
   const char *signature;
 } function_link_t;
 

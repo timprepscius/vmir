@@ -29,7 +29,18 @@ void SimpleVector::printValue()
 	printf("SimpleVector %f %f %f\n", v[0], v[1], v[2]);
 }
 
+void SimpleVector::printOther (int other)
+{
+	printf("%d\n", other);
+}
+
 float vector_calculation (const SimpleVector &v)
 {
 	return v.x() + v.y() + v.z();
+}
+
+int MyNamespace::MySubNamespace::MyClass::MyFunction(int myarg)
+{
+	printf("Test namespaces %d\n", myarg);
+	return 0;
 }

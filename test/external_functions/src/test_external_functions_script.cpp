@@ -24,9 +24,13 @@ void script_function_interchange ()
 {
 	SimpleVector v(1, 2, 3);
 	v.printValue();
+	v.printOther(42);
 	
 	float x = vector_calculation (v);
 	simple_print_f(x);
+	
+	MyNamespace::MySubNamespace::MyClass c;
+	c.MyFunction(42);
 }
 
 }
