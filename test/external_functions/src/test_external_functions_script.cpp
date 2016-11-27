@@ -26,11 +26,24 @@ void script_function_interchange ()
 	v.printValue();
 	v.printOther(42);
 	
+	IntVector4 iv4 = makeIntVector4();
+	iv4.printValue();
+
+	IntVector8 iv8 = makeIntVector8();
+	iv8.printValue();
+	
+	IntVector1 iv1 = makeIntVector1();
+	iv1.printValue();
+	
 	float x = vector_calculation (v);
 	simple_print_f(x);
 	
 	MyNamespace::MySubNamespace::MyClass c;
 	c.MyFunction(42);
+	
+	// std::vector<int> i;
+	// i.push_back(42);
+	// v.printOther(v[0]);
 }
 
 }

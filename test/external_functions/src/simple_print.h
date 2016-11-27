@@ -49,7 +49,58 @@ public:
 	
 	void printValue ();
 	void printOther (int other);
+	
 } ;
+
+class IntVector8 {
+	int v[8];
+
+public:
+	IntVector8 () {
+		v[0] = 0xBADF;
+		v[1] = 0x00D5;
+		v[2] = 0xBADF;
+		v[3] = 0x00D1;
+		v[4] = 0xBADF;
+		v[5] = 0x00D5;
+		v[6] = 0xBADF;
+		v[7] = 0x00D1;
+	}
+	
+	IntVector8 returnOne ();
+	void printValue ();
+};
+
+class IntVector4 {
+	int v[4];
+
+public:
+	IntVector4 () {
+		v[0] = 0xBADF;
+		v[1] = 0x00D5;
+		v[2] = 0xBADF;
+		v[3] = 0x00D1;
+	}
+	
+	IntVector4 returnOne ();
+	void printValue ();
+};
+
+class IntVector1 {
+	int v[4];
+
+public:
+	IntVector1 () {
+		v[0] = 0xBADF;
+	}
+	
+	IntVector1 returnOne ();
+	void printValue ();
+};
+
+IntVector8 makeIntVector8();
+IntVector4 makeIntVector4();
+IntVector1 makeIntVector1();
 
 float vector_calculation (const SimpleVector &v);
 

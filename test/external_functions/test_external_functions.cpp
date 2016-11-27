@@ -69,76 +69,154 @@ constexpr auto inferMemberFunctionPointer(R (C::*method)(A...))
 	return MemberFunctionPointer<R,C,A...>{};
 }
 
+template<typename R, typename... A>
+struct FunctionPointer
+{
+	typedef R Return;
+};
+
+template<typename R, typename... A>
+constexpr auto inferFunctionPointer(R (*method)(A...))
+{
+	return FunctionPointer<R,A...>{};
+}
+
+//-----------------------------------
+
 template<typename M, M m, typename... A>
 class WrapMemberFunction
 {
 	typedef typename decltype(inferMemberFunctionPointer(m))::Class T;
 	typedef typename decltype(inferMemberFunctionPointer(m))::Return R;
 public:
-	static R f (T *t, A... args) {
+	static void f (R *r, T *t, A... args) {
 		T *n = vmir_to_nativeptr(vmir_get_thread_ir_unit(), t);
-		return (n->*m)(args...);
+		*r = (n->*m)(args...);
 	}
-	
 } ;
+
+template<typename M, M m, typename... A>
+class WrapMemberFunctionV
+{
+	typedef typename decltype(inferMemberFunctionPointer(m))::Class T;
+	typedef typename decltype(inferMemberFunctionPointer(m))::Return R;
+public:
+	static void f (R *r, T *t, A... args) {
+		T *n = vmir_to_nativeptr(vmir_get_thread_ir_unit(), t);
+		(n->*m)(args...);
+	}
+} ;
+
+//-----------------------------------------
+
+template<typename F, F fn, typename... A>
+class WrapFunction
+{
+	typedef typename decltype(inferFunctionPointer(fn))::Return R;
+public:
+	static void f (R *r, A... args) {
+		*r = (*fn)(args...);
+	}
+} ;
+
+template<typename F, F fn, typename... A>
+class WrapFunctionV
+{
+	typedef typename decltype(inferFunctionPointer(fn))::Return R;
+public:
+	static void f (R *r, A... args) {
+		(*fn)(args...);
+	}
+} ;
+
+//------------------------------------------
+
+
+#define WrapFunc(M) &WrapFunction<decltype(&M), &M>::f
+#define WrapFuncA(M, args...) &WrapFunction<decltype(&M), &M, args>::f
+#define WrapFuncV(M) &WrapFunctionV<decltype(&M), &M>::f
+#define WrapFuncVA(M, args...) &WrapFunctionV<decltype(&M), &M, args>::f
 
 #define WrapMethod(TM) &WrapMemberFunction<decltype(&TM), &TM>::f
 #define WrapMethodA(TM, args...) &WrapMemberFunction<decltype(&TM), &TM, args>::f
 
+#define WrapMethodV(TM) &WrapMemberFunctionV<decltype(&TM), &TM>::f
+#define WrapMethodVA(TM, args...) &WrapMemberFunctionV<decltype(&TM), &TM, args>::f
 
 
-
-	template<typename M, M m, typename... A>
-	class GenerateMethodSignature
+template<typename M, M m, typename... A>
+class GenerateMethodSignature
+{
+	typedef typename decltype(inferMemberFunctionPointer(m))::Class T;
+	typedef typename decltype(inferMemberFunctionPointer(m))::Return R;
+	
+	
+public:
+	static const char *mangledName (const char *fs)
 	{
-		typedef typename decltype(inferMemberFunctionPointer(m))::Class T;
-		typedef typename decltype(inferMemberFunctionPointer(m))::Return R;
+		const char *ts = typeid(T).name();
+		const char *rs = typeid(R).name();
+		const char *ms = typeid(M).name();
 		
-		
-	public:
-		static const char *mangledName (const char *fs)
-		{
-			const char *ts = typeid(T).name();
-			const char *rs = typeid(R).name();
-			const char *ms = typeid(M).name();
-			
-			std::string r = "_Z";
-			if (ts[0] != 'N')
-				r += "N";
-			r += ts;
-			if (ts[0] == 'N')
-				r.pop_back();
-
-			r += std::to_string(strlen(fs));
-			r += fs;
-			r += "E";
-
-			r += ms + strlen ("M") + strlen(ts) + strlen ("F") + strlen(rs);
+		std::string r = "_Z";
+		if (ts[0] != 'N')
+			r += "N";
+		r += ts;
+		if (ts[0] == 'N')
 			r.pop_back();
 
-			printf("calculated signature %s\n", r.c_str());
+		r += std::to_string(strlen(fs));
+		r += fs;
+		r += "E";
 
-			// this is very bad but... for demonstration purposes
-			return strdup(r.c_str());
-		}
-	} ;
+		const char *ms_ = ms + strlen ("M") + strlen(ts) + strlen ("F");
+		if (*ms_ == 'S')
+			ms_+=2;
+		else
+			ms_+=1;
 
-	#define ExportSignature(T, M) GenerateMethodSignature<decltype(&T::M), &T::M>::mangledName(#M)
-	const char *myMethodSignature = ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction);
+		r += ms_;
+		r.pop_back();
+
+		printf("calculated signature %s\n", r.c_str());
+
+		// this is very bad but... for demonstration purposes
+		return strdup(r.c_str());
+	}
+} ;
+
+#define ExportSignature(T, M) GenerateMethodSignature<decltype(&T::M), &T::M>::mangledName(#M)
+const char *myMethodSignature = ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction);
 
 
-#define ExportFunction(F) { (FunctionPtr)F, typeid(F).name() }
+#define ExportFunction(F) { (FunctionPtr)WrapFunc(F), typeid(F).name() }
+#define ExportFunctionA(F, args...) { (FunctionPtr)WrapFuncA(F, args), typeid(F).name() }
+#define ExportFunctionV(F) { (FunctionPtr)WrapFuncV(F), typeid(F).name() }
+#define ExportFunctionVA(F, args...) { (FunctionPtr)WrapFuncVA(F, args), typeid(F).name() }
+#define ExportMethodV(TM) { (FunctionPtr)WrapMethodV(TM), typeid(&TM).name() }
+#define ExportMethodVA(TM, args...) { (FunctionPtr)WrapMethodVA(TM, args), typeid(&TM).name() }
 #define ExportMethod(TM) { (FunctionPtr)WrapMethod(TM), typeid(&TM).name() }
 #define ExportMethodA(TM, args...) { (FunctionPtr)WrapMethodA(TM, args), typeid(&TM).name() }
 
 std::map<const char *, function_link_t> external_functions = {
-	{ "_Z12simple_printPKcchijfdxy", ExportFunction(simple_print) },
-	{ "_Z14simple_print_ff", ExportFunction(simple_print_f) },
-	{ ExportSignature(ValueHolder, printValue), ExportMethod(ValueHolder::printValue)  },
-	{ ExportSignature(SimpleVector, printValue), ExportMethod(SimpleVector::printValue) },
-	{ ExportSignature(SimpleVector, printOther), ExportMethodA(SimpleVector::printOther, int) },
+	{ "_Z12simple_printPKcchijfdxy", ExportFunctionVA(
+		simple_print, char *, char, unsigned char, int, unsigned int, float, double, uint32_t, uint64_t
+	) },
+	{ "_Z14simple_print_ff", ExportFunctionVA(simple_print_f, float) },
+	{ "_Z14makeIntVector8v", ExportFunction(makeIntVector8) },
+	{ "_Z14makeIntVector4v", ExportFunction(makeIntVector4) },
+	{ "_Z14makeIntVector1v", ExportFunction(makeIntVector1) },
+	{ ExportSignature(ValueHolder, printValue), ExportMethodV(ValueHolder::printValue)  },
+	{ ExportSignature(SimpleVector, printValue), ExportMethodV(SimpleVector::printValue) },
+	{ ExportSignature(SimpleVector, printOther), ExportMethodVA(SimpleVector::printOther, int) },
+	{ ExportSignature(IntVector8, returnOne), ExportMethod(IntVector8::returnOne) },
+	{ ExportSignature(IntVector8, printValue), ExportMethodV(IntVector8::printValue) },
+	{ ExportSignature(IntVector4, returnOne), ExportMethod(IntVector4::returnOne) },
+	{ ExportSignature(IntVector4, printValue), ExportMethodV(IntVector4::printValue) },
+	{ ExportSignature(IntVector1, returnOne), ExportMethod(IntVector1::returnOne) },
+	{ ExportSignature(IntVector1, printValue), ExportMethodV(IntVector1::printValue) },
 	{ ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction), ExportMethodA(MyNamespace::MySubNamespace::MyClass::MyFunction, int) },
-	{ "_Z18vector_calculationRK12SimpleVector", ExportFunction(vector_calculation) }
+	{ "_Z18vector_calculationRK12SimpleVector", ExportFunctionA(vector_calculation, const SimpleVector &) }
 //	{ "_ZN12SimpleVector10printOtherEi", ExportMethodA(SimpleVector::printOther, int) },
 //	{ "_Z18vector_calculationRK12SimpleVector", ExportFunction(vector_calculation) }
 };

@@ -13,9 +13,12 @@
 // this needs to be changed to handle actual mangling syntax
 static void skip_type (const char **c)
 {
+	bool once = true;
 	bool longName = (**c == 'N');
-	while (longName)
+	while (longName || once)
 	{
+		once = false;
+		
 		if (**c == 'E')
 			longName = false;
 		else
@@ -73,6 +76,10 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 	int registersUsed = 0;
 	int floatsUsed = 0;
 	
+	// one register is the return value
+	int64_t retval;
+	*registers[registersUsed++] = (int64_t)&retval;
+	
 	// ----------------------------------------
 	
 	char stack[256];
@@ -87,6 +94,14 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 		{
 		case 'F':
 			returnType = *++c;
+			if (isnumber(returnType))
+			{
+				returnType = 'S';
+				*registers[0] = (uint64_t)vmir_vm_ptr(&rf, iu);
+				skip_type(&c);
+				--c;
+			}
+			
 		break;
 		
 		case 'M':
@@ -183,7 +198,9 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 	float result_r4;
 	double result_r8;
 	
-    alloca(s - stack);
+	int stack_argument_size = s - stack;
+	const int extra_stack_for_returns = 256;
+    alloca(stack_argument_size + extra_stack_for_returns);
     asm {
         mov pStack, rsp
     };
@@ -235,6 +252,42 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 //		mov rax, floatsUsed
 	}
 
+	__asm {
+		call pfn
+	}
+
+	switch (returnType)
+	{
+		case 'f':
+			vmir_vm_ret32(ret, *(int32_t *)&retval);
+        break;
+
+		case 'd':
+			vmir_vm_ret64(ret, *(int64_t *)&retval);
+        break;
+	
+		case 'c':
+		case 'i':
+			vmir_vm_ret32(ret, *(int32_t *)&retval);
+        break;
+
+		case 'l':
+		case 'm':
+		case 'x':
+			vmir_vm_ret64(ret, *(int64_t *)&retval);
+        break;
+		
+		case 'P':
+			vmir_vm_ret32(ret, vmir_host_to_vmaddr(iu, (void *)retval));
+		break;
+		case 'S':
+		case 'v':
+		break;
+	};
+	
+	
+	
+				/*
 	switch (returnType)
 	{
 		case 'f':
@@ -266,7 +319,8 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
         break;
 
 		case 'l':
-		case '*':
+		case 'm':
+		case 'x':
             __asm {
 				call pfn
                 mov result_i8, rax
@@ -275,11 +329,30 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 			vmir_vm_ret64(ret, *(int64_t *)&result_i8);
         break;
 		
+		case 'S':
+		case 'P':
+            __asm {
+//				sub rsp, 256
+            }
+			
+            __asm {
+				call pfn
+            }
+
+			__asm {
+                mov result_i8, rax
+				sub rsp, 256
+			}
+			
+			vmir_vm_ret32(ret, vmir_host_to_vmaddr(iu, (void *)result_i8));
+        break;
+
 		case 'v':
 			__asm {
 				call pfn
 			}
 	}
+		*/
 
 	return 0;
 }

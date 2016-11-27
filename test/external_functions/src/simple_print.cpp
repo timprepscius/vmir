@@ -34,6 +34,64 @@ void SimpleVector::printOther (int other)
 	printf("%d\n", other);
 }
 
+IntVector8 IntVector8::returnOne()
+{
+	IntVector8 a;
+	IntVector8 *b = &a;
+	return a;
+}
+
+IntVector8 makeIntVector8()
+{
+	IntVector8 a;
+	IntVector8 *b = &a;
+	return a;
+}
+
+IntVector1 makeIntVector1()
+{
+	IntVector1 a;
+	IntVector1 *b = &a;
+	return a;
+}
+
+void IntVector8::printValue ()
+{
+	printf ("%d %d %d %d\n", v[0], v[1], v[2], v[3]);
+}
+
+IntVector4 IntVector4::returnOne()
+{
+	IntVector4 a;
+	IntVector4 *b = &a;
+	return a;
+}
+
+void IntVector1::printValue ()
+{
+	printf ("%04x\n", v[0]);
+}
+
+IntVector1 IntVector1::returnOne()
+{
+	IntVector1 a;
+	IntVector1 *b = &a;
+	return a;
+}
+
+IntVector4 makeIntVector4()
+{
+	IntVector4 a;
+	IntVector4 *b = &a;
+	return a;
+}
+
+void IntVector4::printValue ()
+{
+	printf ("%04x%04x%04x%04x\n", v[0], v[1], v[2], v[3]);
+}
+
+
 float vector_calculation (const SimpleVector &v)
 {
 	return v.x() + v.y() + v.z();
