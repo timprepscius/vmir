@@ -73,8 +73,8 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 	int64_t *floats[] = { &_xmm0, &_xmm1, &_xmm2, &_xmm3, &_xmm4, &_xmm5, &_xmm6, &_xmm7 };
 	int floatsAvailable = sizeof(floats)/sizeof(floats[0]);
 
-	int registersUsed = 0;
-	int floatsUsed = 0;
+	int64_t registersUsed = 0;
+	int64_t floatsUsed = 0;
 	
 	// one register is the return value
 	int64_t retval;
@@ -212,27 +212,26 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 	__asm {
 		cmp registersUsed,0
 		jle end_set_registers
-
 		mov rdi, _rdi
+
 		cmp registersUsed,1
 		jle end_set_registers
-
 		mov rsi, _rsi;
+
 		cmp registersUsed,2
 		jle end_set_registers
-
 		mov rdx, _rdx;
+
 		cmp registersUsed,3
 		jle end_set_registers
-
 		mov rcx, _rcx
+
 		cmp registersUsed,4
 		jle end_set_registers
-
 		mov r8, _r8
+
 		cmp registersUsed,5
 		jle end_set_registers
-
 		mov r9, _r9;
 		
 	end_set_registers:
@@ -240,16 +239,38 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 		cmp floatsUsed,0
 		jle end_set_floats
 		movsd xmm0, _xmm0
-		mov rax, 1
 
 		cmp floatsUsed,1
 		jle end_set_floats
 		movsd xmm1, _xmm1
-		mov rax, 2
+
+		cmp floatsUsed,2
+		jle end_set_floats
+		movsd xmm2, _xmm2
+
+		cmp floatsUsed,3
+		jle end_set_floats
+		movsd xmm3, _xmm3
+
+		cmp floatsUsed,4
+		jle end_set_floats
+		movsd xmm4, _xmm4
+
+		cmp floatsUsed,5
+		jle end_set_floats
+		movsd xmm5, _xmm5
+
+		cmp floatsUsed,6
+		jle end_set_floats
+		movsd xmm6, _xmm6
 		
+		cmp floatsUsed,7
+		jle end_set_floats
+		movsd xmm7, _xmm7
+
 	end_set_floats:
 		
-//		mov rax, floatsUsed
+		mov rax, floatsUsed
 	}
 
 	__asm {
