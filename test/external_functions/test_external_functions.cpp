@@ -132,16 +132,10 @@ public:
 //------------------------------------------
 
 
-#define WrapFunc(M) &WrapFunction<decltype(&M), &M>::f
-#define WrapFuncA(M, args...) &WrapFunction<decltype(&M), &M, args>::f
-#define WrapFuncV(M) &WrapFunctionV<decltype(&M), &M>::f
-#define WrapFuncVA(M, args...) &WrapFunctionV<decltype(&M), &M, args>::f
-
-#define WrapMethod(TM) &WrapMemberFunction<decltype(&TM), &TM>::f
-#define WrapMethodA(TM, args...) &WrapMemberFunction<decltype(&TM), &TM, args>::f
-
-#define WrapMethodV(TM) &WrapMemberFunctionV<decltype(&TM), &TM>::f
-#define WrapMethodVA(TM, args...) &WrapMemberFunctionV<decltype(&TM), &TM, args>::f
+#define WrapFunc(M, ...) &WrapFunction<decltype(&M), &M, ##__VA_ARGS__>::f
+#define WrapFuncV(M, ...) &WrapFunctionV<decltype(&M), &M, ##__VA_ARGS__>::f
+#define WrapMethod(TM, ...) &WrapMemberFunction<decltype(&TM), &TM, ##__VA_ARGS__>::f
+#define WrapMethodV(TM, ...) &WrapMemberFunctionV<decltype(&TM), &TM, ##__VA_ARGS__>::f
 
 
 template<typename M, M m, typename... A>
@@ -189,34 +183,31 @@ public:
 const char *myMethodSignature = ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction);
 
 
-#define ExportFunction(F) { (FunctionPtr)WrapFunc(F), typeid(F).name() }
-#define ExportFunctionA(F, args...) { (FunctionPtr)WrapFuncA(F, args), typeid(F).name() }
-#define ExportFunctionV(F) { (FunctionPtr)WrapFuncV(F), typeid(F).name() }
-#define ExportFunctionVA(F, args...) { (FunctionPtr)WrapFuncVA(F, args), typeid(F).name() }
-#define ExportMethodV(TM) { (FunctionPtr)WrapMethodV(TM), typeid(&TM).name() }
-#define ExportMethodVA(TM, args...) { (FunctionPtr)WrapMethodVA(TM, args), typeid(&TM).name() }
-#define ExportMethod(TM) { (FunctionPtr)WrapMethod(TM), typeid(&TM).name() }
-#define ExportMethodA(TM, args...) { (FunctionPtr)WrapMethodA(TM, args), typeid(&TM).name() }
+#define ExportFunction(F, ...) { (FunctionPtr)WrapFunc(F, ##__VA_ARGS__), typeid(F).name() }
+#define ExportFunctionV(F, ...) { (FunctionPtr)WrapFuncV(F, ##__VA_ARGS__), typeid(F).name() }
+#define ExportMethod(TM, ...) { (FunctionPtr)WrapMethod(TM, ##__VA_ARGS__), typeid(&TM).name() }
+#define ExportMethodV(TM, ...) { (FunctionPtr)WrapMethodV(TM, ##__VA_ARGS__), typeid(&TM).name() }
 
 std::map<const char *, function_link_t> external_functions = {
-	{ "_Z12simple_printPKcchijfdxy", ExportFunctionVA(
+	{ "_Z12simple_printPKcchijfdxy", ExportFunctionV(
 		simple_print, char *, char, unsigned char, int, unsigned int, float, double, uint32_t, uint64_t
 	) },
-	{ "_Z14simple_print_ff", ExportFunctionVA(simple_print_f, float) },
+	{ "_Z14simple_print_ff", ExportFunctionV(simple_print_f, float) },
 	{ "_Z14makeIntVector8v", ExportFunction(makeIntVector8) },
 	{ "_Z14makeIntVector4v", ExportFunction(makeIntVector4) },
 	{ "_Z14makeIntVector1v", ExportFunction(makeIntVector1) },
 	{ ExportSignature(ValueHolder, printValue), ExportMethodV(ValueHolder::printValue)  },
 	{ ExportSignature(SimpleVector, printValue), ExportMethodV(SimpleVector::printValue) },
-	{ ExportSignature(SimpleVector, printOther), ExportMethodVA(SimpleVector::printOther, int) },
+	{ ExportSignature(SimpleVector, printOther), ExportMethodV(SimpleVector::printOther, int) },
 	{ ExportSignature(IntVector8, returnOne), ExportMethod(IntVector8::returnOne) },
 	{ ExportSignature(IntVector8, printValue), ExportMethodV(IntVector8::printValue) },
 	{ ExportSignature(IntVector4, returnOne), ExportMethod(IntVector4::returnOne) },
 	{ ExportSignature(IntVector4, printValue), ExportMethodV(IntVector4::printValue) },
 	{ ExportSignature(IntVector1, returnOne), ExportMethod(IntVector1::returnOne) },
 	{ ExportSignature(IntVector1, printValue), ExportMethodV(IntVector1::printValue) },
-	{ ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction), ExportMethodA(MyNamespace::MySubNamespace::MyClass::MyFunction, int) },
-	{ "_Z18vector_calculationRK12SimpleVector", ExportFunctionA(vector_calculation, const SimpleVector &) }
+	{ ExportSignature(MyNamespace::MySubNamespace::MyClass, MyFunction),
+	ExportMethod(MyNamespace::MySubNamespace::MyClass::MyFunction, int) },
+	{ "_Z18vector_calculationRK12SimpleVector", ExportFunction(vector_calculation, const SimpleVector &) }
 //	{ "_ZN12SimpleVector10printOtherEi", ExportMethodA(SimpleVector::printOther, int) },
 //	{ "_Z18vector_calculationRK12SimpleVector", ExportFunction(vector_calculation) }
 };

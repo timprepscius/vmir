@@ -238,7 +238,7 @@
 					VM_DONT_USE_COMPUTED_GOTO,
 					"DEBUG=1",
 					"$(inherited)",
-					VM_TRACE,
+					VM_TRACE_NO,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

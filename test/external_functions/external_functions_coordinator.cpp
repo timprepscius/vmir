@@ -193,14 +193,9 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 	
 	char *pStack;
 	char *i = stack;
-	int32_t result_i4;
-	int64_t result_i8;
-	float result_r4;
-	double result_r8;
 	
-	int stack_argument_size = s - stack;
-	const int extra_stack_for_returns = 256;
-    alloca(stack_argument_size + extra_stack_for_returns);
+	auto stack_argument_size = s - stack;
+    alloca(stack_argument_size);
     asm {
         mov pStack, rsp
     };
@@ -295,86 +290,19 @@ int vmir_ext_ext_with_signature (void *fn, const char *signature, void *ret, con
 		case 'l':
 		case 'm':
 		case 'x':
+		case 'y':
 			vmir_vm_ret64(ret, *(int64_t *)&retval);
         break;
 		
 		case 'P':
 			vmir_vm_ret32(ret, vmir_host_to_vmaddr(iu, (void *)retval));
 		break;
+		
 		case 'S':
 		case 'v':
 		break;
 	};
 	
-	
-	
-				/*
-	switch (returnType)
-	{
-		case 'f':
-            __asm {
-                call pfn
-				movss result_r4, xmm0;
-            }
-
-			vmir_vm_ret32(ret, *(int32_t *)&result_r4);
-        break;
-
-		case 'd':
-            __asm {
-                call pfn
-				movsd result_r8, xmm0;
-            }
-
-			vmir_vm_ret64(ret, *(int64_t *)&result_r8);
-        break;
-	
-		case 'c':
-		case 'i':
-            __asm {
-				call pfn
-                mov result_i4, eax
-            }
-			
-			vmir_vm_ret32(ret, *(int32_t *)&result_i4);
-        break;
-
-		case 'l':
-		case 'm':
-		case 'x':
-            __asm {
-				call pfn
-                mov result_i8, rax
-            }
-			
-			vmir_vm_ret64(ret, *(int64_t *)&result_i8);
-        break;
-		
-		case 'S':
-		case 'P':
-            __asm {
-//				sub rsp, 256
-            }
-			
-            __asm {
-				call pfn
-            }
-
-			__asm {
-                mov result_i8, rax
-				sub rsp, 256
-			}
-			
-			vmir_vm_ret32(ret, vmir_host_to_vmaddr(iu, (void *)result_i8));
-        break;
-
-		case 'v':
-			__asm {
-				call pfn
-			}
-	}
-		*/
-
 	return 0;
 }
 
