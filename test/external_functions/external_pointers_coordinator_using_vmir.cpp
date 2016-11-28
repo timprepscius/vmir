@@ -11,6 +11,8 @@
 
 #include <unordered_map>
 
+using namespace vmir;
+
 
 // -----------------
 // this implementation uses the vmir heap as a means to store ptrs

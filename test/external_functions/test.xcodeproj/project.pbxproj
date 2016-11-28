@@ -34,6 +34,9 @@
 		F63B43B81DE4BE0C00319DAC /* external_pointers_coordinator_using_vmir.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = external_pointers_coordinator_using_vmir.cpp; sourceTree = "<group>"; };
 		F63B43BA1DE4C1FC00319DAC /* safe_vmir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = safe_vmir.h; sourceTree = "<group>"; };
 		F69B25061DE7318D00FD518E /* external_pointers_coordinator_using_vmir_and_flag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = external_pointers_coordinator_using_vmir_and_flag.cpp; sourceTree = "<group>"; };
+		F6A124C41DEBA89600F6BF9F /* external_functions_templates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = external_functions_templates.h; sourceTree = "<group>"; };
+		F6A124C51DEBAACA00F6BF9F /* external_functions_signatures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = external_functions_signatures.h; sourceTree = "<group>"; };
+		F6A124C61DEBB8D500F6BF9F /* external_functions_export.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = external_functions_export.h; sourceTree = "<group>"; };
 		F6B7BD231DE2035E00FE1D6F /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6B7BD241DE203E400FE1D6F /* test_external_functions_script.bc */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_external_functions_script.bc; path = "build-O0/test_external_functions_script.bc"; sourceTree = "<group>"; };
 		F6B7BD251DE203FE00FE1D6F /* test_external_functions_script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_external_functions_script.cpp; path = src/test_external_functions_script.cpp; sourceTree = "<group>"; };
@@ -71,8 +74,11 @@
 		F6D0681F1CB9B8DD00220DE5 = {
 			isa = PBXGroup;
 			children = (
+				F6A124C61DEBB8D500F6BF9F /* external_functions_export.h */,
 				F6B7BD2E1DE20EBF00FE1D6F /* src */,
 				F63B43BA1DE4C1FC00319DAC /* safe_vmir.h */,
+				F6A124C41DEBA89600F6BF9F /* external_functions_templates.h */,
+				F6A124C51DEBAACA00F6BF9F /* external_functions_signatures.h */,
 				F69B25061DE7318D00FD518E /* external_pointers_coordinator_using_vmir_and_flag.cpp */,
 				F63B43B81DE4BE0C00319DAC /* external_pointers_coordinator_using_vmir.cpp */,
 				F63B43B51DE4BC0F00319DAC /* external_pointers_coordinator_using_maps.cpp */,

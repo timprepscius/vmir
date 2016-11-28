@@ -11,7 +11,6 @@
 
 #include <unordered_map>
 
-
 // -----------------
 // this implementation uses the vmir heap as a means to store ptrs
 // this makes the vmir -> native transition much faster.

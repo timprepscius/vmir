@@ -10,6 +10,8 @@
 
 #include <unordered_map>
 
+using namespace vmir;
+
 volatile uint32_t native_ptr_map_counter = 0;
 std::unordered_map<native_ptr, vmir_ptr> ptr_native_to_vm_map;
 std::unordered_map<vmir_ptr, native_ptr> ptr_vm_to_native_map;
