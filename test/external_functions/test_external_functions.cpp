@@ -42,6 +42,24 @@ void readFileIntoMemory (const char *fileName, uint8_t **memory, long long *size
   *size = st.st_size;
 }
 
+void doNothing ()
+{
+	int x = 1;
+	x = 2;
+}
+
+void mov32 (int32_t lhs_, int32_t rhs_, int32_t size, int32_t align, int8_t vol)
+//void mov32 (void *lhs, void *rhs, int32_t size, int32_t align, int8_t vol)
+{
+	void *lhs = vmir_vmaddr_to_host(vmir_get_thread_ir_unit(), lhs_);
+	void *rhs = vmir_vmaddr_to_host(vmir_get_thread_ir_unit(), rhs_);
+	
+	memmove(
+		lhs, rhs,
+		size
+	);
+}
+
 std::map<const char *, function_link_t> external_functions = {
 	vmir_export_function(simple_print),
 	vmir_export_function(simple_print_f),
@@ -58,7 +76,10 @@ std::map<const char *, function_link_t> external_functions = {
 	vmir_export_method(IntVector1::returnOne),
 	vmir_export_method(IntVector1::printValue),
 	vmir_export_method(MyNamespace::MySubNamespace::MyClass::MyFunction),
-	vmir_export_function(vector_calculation)
+	vmir_export_function(vector_calculation),
+	{ "_ZSt20__throw_length_errorPKc", vmir_wrap_function(doNothing) },
+	{ "_ZSt17__throw_bad_allocv", vmir_wrap_function(doNothing) },
+	{ "llvm.memmove.p0i8.p0i8.i32", vmir_wrap_function(mov32) }
 };
 
 int main(int argc,char **argv)

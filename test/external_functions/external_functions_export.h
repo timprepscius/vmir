@@ -12,3 +12,8 @@
 #include "external_functions_templates.h"
 #include "external_functions_signatures.h"
 
+#define vmir_wrap_function(F) { (FunctionPtr)vmir_wrap_callable(F), typeid(F).name() }
+#define vmir_wrap_method(TM) { (FunctionPtr)vmir_wrap_callable(TM), typeid(&TM).name() }
+
+#define vmir_export_function(F) { vmir_signature_callable(F), vmir_wrap_function(F) }
+#define vmir_export_method(F) { vmir_signature_callable(F), vmir_wrap_method(F) }

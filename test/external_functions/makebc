@@ -1,0 +1,20 @@
+#clang -emit-llvm -target le32-unknown-nacl -c test_external_functions_script.cpp -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk -I /Applications/Xcode-Version-7.2.1/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/c++/4.2.1/ -D__arm__
+#clang -emit-llvm -target le32-unknown-nacl -c src/test_external_functions_script.cpp -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk -I /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/c++/4.2.1/ -D__arm__
+
+clang \
+	-emit-llvm \
+	-target le32-unknown-nacl \
+	-c src/test_external_functions_script.cpp \
+	-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk \
+	-I /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/c++/4.2.1/ \
+	-I /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/ \
+	-D__arm__ \
+
+#	-Wc++11-extensions
+
+mkdir -p build
+rm -f build/test_external_functions_script.bc
+mv test_external_functions_script.bc build
+
+#../../../llvm-3.8.0.src/build/bin/llvm-dis ./test_external_functions_script.bc
+

@@ -7,6 +7,8 @@
 //
 
 #include "simple_print.h"
+#include <vector>
+#include <algorithm>
 
 extern "C" {
 
@@ -41,9 +43,15 @@ void script_function_interchange ()
 	MyNamespace::MySubNamespace::MyClass c;
 	c.MyFunction(42);
 	
-	// std::vector<int> i;
-	// i.push_back(42);
-	// v.printOther(v[0]);
+	std::vector<int> iv;
+	iv.push_back(84);
+	iv.push_back(87);
+	iv.push_back(86);
+	iv.push_back(85);
+	
+	std::sort(iv.begin(), iv.end());
+	for (auto &i : iv)
+		v.printOther(i);
 }
 
 }

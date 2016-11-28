@@ -104,13 +104,13 @@ IntVector1 makeIntVector1();
 
 float vector_calculation (const SimpleVector &v);
 
-	namespace MyNamespace {
-	namespace MySubNamespace {
-	class MyClass
-	{
-	public:
-		int MyFunction (int myarg);
-	} ;
-	} // namespace
-	} // namespace
+namespace MyNamespace {
+namespace MySubNamespace {
+class MyClass
+{
+public:
+	int MyFunction (int myarg);
+} ;
+} // namespace
+} // namespace
 
