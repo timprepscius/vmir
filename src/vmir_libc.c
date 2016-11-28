@@ -1616,6 +1616,19 @@ vmir___cxa_throw(void *ret, const void *rf, ir_unit_t *iu)
   return 1;
 }
 
+static int
+vmir___cxa_rethrow(void *ret, const void *rf, ir_unit_t *iu)
+{
+  iu->iu_exception.exception = vmir_vm_arg32(&rf);
+  iu->iu_exception.type_info = vmir_vm_arg32(&rf);
+
+  vmir_cxx_exception_t *exc =
+    iu->iu_mem + iu->iu_exception.exception  - sizeof(vmir_cxx_exception_t);
+  exc->destructor = vmir_vm_arg32(&rf);
+  assert(exc->destructor == 0); // Not really supported (yet)
+  iu->iu_exception.uncaught++;
+  return 1;
+}
 
 static int
 vmir_std_terminate(void *ret, const void *rf, ir_unit_t *iu)
@@ -1737,6 +1750,7 @@ static const vmir_function_tab_t libc_funcs[] = {
   FN_EXT("__cxa_begin_catch", vmir___cxa_begin_catch),
   FN_EXT("__cxa_end_catch", vmir___cxa_end_catch),
   FN_EXT("__cxa_throw", vmir___cxa_throw),
+  FN_EXT("__cxa_rethrow", vmir___cxa_rethrow),
   FN_EXT("llvm.eh.typeid.for", vmir_llvm_eh_typeid_for),
   FN_EXT("_ZSt9terminatev", vmir_std_terminate),
 };

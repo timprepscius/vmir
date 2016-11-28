@@ -1795,9 +1795,10 @@ liveness_update(ir_function_t *f, int setwords, int ffv)
 
         const uint32_t *o;
 
-        if(ii->ii_num_succ == -1) {
+		// in the case of STACKSHRINK, it is the last instruction, and has ii_num_succ == -1
+        if(ii->ii_num_succ == -1 && TAILQ_NEXT(ii, ii_link)) {
           ir_instr_t *succ = TAILQ_NEXT(ii, ii_link);
-          o = succ->ii_liveness + setwords * 2;
+		  o = succ->ii_liveness + setwords * 2;
         } else {
           memset(new_out, 0, setwords * sizeof(uint32_t));
 
@@ -2173,7 +2174,8 @@ prepare_call(ir_unit_t *iu, ir_function_t *f, ir_instr_call_t *ii,
   if(callee != NULL)
     callee->if_used = 1;
 
-  if(stackgrowth > 0) {
+  if(stackgrowth > 0)
+  {
     ir_instr_stackshrink_t *ss =
       instr_add_after(sizeof(ir_instr_stackshrink_t), IR_IC_STACKSHRINK,
                       &ii->super);
